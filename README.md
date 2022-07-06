@@ -1,3 +1,5 @@
+[![.github/workflows/npm-publish.yml](https://github.com/matiasfha/svelte-image-preprocessing-clodinary/actions/workflows/npm-publish.yml/badge.svg)](https://github.com/matiasfha/svelte-image-preprocessing-clodinary/actions/workflows/npm-publish.yml)
+
 # Svelte Image Preprocessor: Cloudinary
 
 This package is a pre-processor for Svelte/SvelteKit applications that automates the image optimization using [Cloudinary](https://cloudinary.com/).
