@@ -24,7 +24,7 @@ npm install svelte-image-preprocessor-cloudinary -D
 
 In your `svelte.config.js` file add `svelte-image-preprocessor-cloudinary` to the pre-process section of it:
 
-```
+```javascript
 ....
 import preprocess from 'svelte-preprocess';
 import { imagePreprocessor } from 'svelte-image-preprocessor-cloudinary';
@@ -49,6 +49,42 @@ Create an `.env` file and add the following
 CLODUNARY_CLOUD_NAME= YOUR_CLOUD_NAME
 CLOUDINARY_API_KEY=
 CLOUDINARY_API_SECRET
+```
+
+
+## Configuration and default values 
+
+The image processor accepts a few options
+
+```javascript 
+const defaults = {
+	// Minimum width for responsive images 
+	min_width: 375,
+	// Max width for responsive images
+	max_width: 1024,
+	// Number of images to create for responsive images
+	max_images: 10,
+}
+```
+You can change any of this values by passing an object as options to the pre-processor 
+
+```javascript
+....
+import preprocess from 'svelte-preprocess';
+import { imagePreprocessor } from 'svelte-image-preprocessor-cloudinary';
+
+...
+const config = {
+	// Consult https://github.com/sveltejs/svelte-preprocess
+	// for more information about preprocessors
+	preprocess: [preprocess(),imagePreprocessor({
+		min_width: 200
+	})],
+
+	....
+};
+...
+
 ```
 
 

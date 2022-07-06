@@ -13,6 +13,8 @@ import { v2 as cloudinary } from 'cloudinary';
 
 
 
+
+
 cloudinary.config({
 	cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
 	api_key: process.env.CLOUDINARY_API_KEY,
@@ -22,6 +24,15 @@ cloudinary.config({
 
 const IS_EXTERNAL = /^(https?:)?\/\//i;
 
+const defaults = {
+	min_width: 375,
+	max_width: 1024,
+	max_images: 10,
+}
+
+/**@type { typeof defaults } */
+let options = JSON.parse(JSON.stringify(defaults))
+
 /** 
  * @param {string} imagePath
  * Upload image represented by imagePath to cloudinary
@@ -29,7 +40,7 @@ const IS_EXTERNAL = /^(https?:)?\/\//i;
  * @return Promise<{import('cloudinary/types/index').UploadApiResponse}'}>
  */
 async function uploadImage(imagePath) {
-	const options = {
+	const cloudinaryOptions = {
 		use_filename: true,
 		unique_filename: false,
 		overwrite: true,
@@ -37,15 +48,16 @@ async function uploadImage(imagePath) {
 		responsive_breakpoints: [{
 			create_derived: false,
 			bytes_step: 20000,
-			min_width: 200, max_width: 1000,
-			max_images: 20
+			min_width: options.min_width,
+			max_width: options.max_width,
+			max_images: options.max_images,
 		}]
 		
 	};
 
 	try {
 		// Upload the image
-		return await cloudinary.uploader.upload(imagePath, options);
+		return await cloudinary.uploader.upload(imagePath, cloudinaryOptions);
 		
 	} catch (error) {
 		console.error(error);
@@ -212,7 +224,12 @@ async function replaceInImg(edited, node) {
 /**
  * @returns () => PreprocessorGroup
  */
-export const imagePreprocessor = () => {
+export const imagePreprocessor = (opts = {}) => {
+	options = {
+		...JSON.parse(JSON.stringify(defaults)),
+		...opts
+	}
+	
 	return {
 		/** @type {import('svelte/types/compiler/preprocess').MarkupPreprocessor} */
 		markup: async ({ content }) => {
