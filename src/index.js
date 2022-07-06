@@ -1,7 +1,7 @@
 import { parse, walk} from 'svelte/compiler';
 import fs from 'node:fs';
 import path from 'node:path'
-
+import 'dotenv/config'
 import { v2 as cloudinary } from 'cloudinary';
 
 /**  @typedef {import('svelte/types/compiler/preprocess').PreprocessorGroup} PreprocessorGroup */
@@ -11,10 +11,12 @@ import { v2 as cloudinary } from 'cloudinary';
 /** @typedef {{willProcess: boolean; reason: string | undefined; paths: string | undefined }} WillProcessMsg */
 /** @typedef {import('./').Node} Node */
 
+
+
 cloudinary.config({
-	cloud_name: 'matiasfha',
-	api_key: '294789585982122',
-	api_secret: '5QqW6BiRsIxUPk3Ye11fq6CpgTw',
+	cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+	api_key: process.env.CLOUDINARY_API_KEY,
+	api_secret: process.env.CLOUDINARY_API_SECRET,
 	secure: true
 });
 
