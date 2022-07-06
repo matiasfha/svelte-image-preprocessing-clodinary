@@ -1,6 +1,6 @@
 {
   "name": "svelte-image-preprocessor-cloudinary",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Image preprocessor for Svelte to use cloudinary remote images",
   "main": "src/index.js",
   "type": "module",
