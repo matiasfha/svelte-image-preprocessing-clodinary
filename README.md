@@ -46,7 +46,7 @@ Create an `.env` file and add the following
 
 
 ```bash
-CLODUNARY_CLOUD_NAME= YOUR_CLOUD_NAME
+CLOUDINARY_CLOUD_NAME= YOUR_CLOUD_NAME
 CLOUDINARY_API_KEY=
 CLOUDINARY_API_SECRET
 ```
@@ -86,6 +86,15 @@ const config = {
 ...
 
 ```
+
+
+# CAVEATS 
+
+This package works flawesly for images directly referenced as string literal in your templates like:
+`<img src="/some_local_image.png" />` or `<img src="http://remoteimage.png" />` but is not yet possible to handle dynamic sources.
+
+The pre-processor have now way to know the value of a dynamic variable passed as a source in build time, therefore this `<img src={someVariable} />` will not be managed by the pre-processor.
+
 
 
 Enjoy!

@@ -40,7 +40,12 @@ let options = JSON.parse(JSON.stringify(defaults))
  * @return Promise<{import('cloudinary/types/index').UploadApiResponse}'}>
  */
 async function uploadImage(imagePath) {
-	const cloudinaryOptions = {
+	const fileExtensionPattern = /\.([0-9a-z]+)(?=[?#])|(\.)(?:[\w]+)$/gmi
+	const isSvg = imagePath.match(fileExtensionPattern)?.[0] === '.svg';
+	/**
+	 * @type {import('cloudinary/types/index').UploadApiOptions}'}
+	 */
+	let cloudinaryOptions = {
 		use_filename: true,
 		unique_filename: false,
 		overwrite: true,
@@ -51,9 +56,12 @@ async function uploadImage(imagePath) {
 			min_width: options.min_width,
 			max_width: options.max_width,
 			max_images: options.max_images,
-		}]
+		}],
 		
 	};
+	if(isSvg) {
+		cloudinaryOptions['format'] = 'png';
+	}
 
 	try {
 		// Upload the image
@@ -137,8 +145,8 @@ function willProcess(nodeSrc) {
 async function getProcessingPathsForNode(node) {
     //@ts-ignore 
 	const [value] = getSrc(node);
-
-	// dynamic or empty value
+	
+	// If the image src is a dynamic url, we can't process it
 	if (value.type === 'MustacheTag' || value.type === 'AttributeShorthand') {
 		return willNotProcess(`Cannot process a dynamic value: ${value.type}`);
 	}
@@ -186,7 +194,7 @@ async function replaceInImg(edited, node) {
 					fetch_format: 'auto',
 					width: 'auto',
 					crop: 'scale',
-					stransformation: [
+					transformation: [
 						{ responsive: true },
 						{ responsive_placeholder: "blank"},
 					]
@@ -263,7 +271,7 @@ export const imagePreprocessor = (opts = {}) => {
 			});
 			if (!imageNodes.length) return { code: content };
 
-
+			
 			const beforeProcessed = Promise.resolve({
 				content,
 				offset: 0
